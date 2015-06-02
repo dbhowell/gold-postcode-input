@@ -1,0 +1,111 @@
+<!--
+@license
+Copyright (c) 2015 David Howell. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+-->
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-input/paper-input-behavior.html">
+<link rel="import" href="../paper-input/paper-input-container.html">
+<link rel="import" href="../paper-input/paper-input-error.html">
+<link rel="import" href="../iron-input/iron-input.html">
+<link rel="import" href="../iron-form-element-behavior/iron-form-element-behavior.html">
+<link rel="import" href="postcode-validator.html">
+
+<!--
+`gold-postcode-input` is a single-line text field with Material Design styling
+for entering an Australian postcode.
+
+    <gold-postcode-input></gold-postcode-input>
+
+It may include an optional label, which by default is "Postcode".
+
+    <gold-postcode-input label="Mailing postcode"></gold-postcode-input>
+
+### Validation
+
+The input supports Australian 4-digit numeric postal codes with the following state based specific ranges. 
+ACT: 0200-0299 and 2600-2639. NSW: 1000-1999, 2000-2599 and 2640-2914. NT: 0900-0999 and 0800-0899. 
+QLD: 9000-9999 and 4000-4999. SA: 5000-5999. TAS: 7800-7999 and 7000-7499. VIC: 8000-8999 and 3000-3999. 
+WA: 6800-6999 and 6000-6799.
+
+The input can be automatically validated as the user is typing by using
+the `auto-validate` and `required` attributes. For manual validation, the
+element also has a `validate()` method, which returns the validity of the
+input as well sets any appropriate error messages and styles.
+
+See `Polymer.PaperInputBehavior` for more API docs.
+
+### Styling
+
+See `Polymer.PaperInputContainer` for a list of custom properties used to
+style this element.
+
+@group Gold Elements
+@hero hero.svg
+@demo demo/index.html
+@class gold-postcode-input
+-->
+
+<dom-module id="gold-postcode-input">
+  <style>
+  :host {
+    display: block;
+  }
+  </style>
+
+  <template>
+
+    <paper-input-container id="container"
+        auto-validate="[[autoValidate]]"
+        attr-for-value="bind-value">
+
+      <label hidden$="[[!label]]">[[label]]</label>
+
+      <postcode-validator></postcode-validator>
+
+      <input is="iron-input" id="input"
+          aria-labelledby$="[[_ariaLabelledBy]]"
+          aria-describedby$="[[_ariaDescribedBy]]"
+          required$="[[required]]"
+          validator="postcode-validator"
+          type="tel"
+          maxlength="10"
+          bind-value="{{value}}"
+          autocomplete="postal-code"
+          name$="[[name]]">
+
+      <template is="dom-if" if="[[errorMessage]]">
+        <paper-input-error id="error">[[errorMessage]]</paper-input-error>
+      </template>
+
+    </paper-input-container>
+  </template>
+
+</dom-module>
+
+<script>
+(function() {
+  Polymer({
+
+    is: 'gold-postcode-input',
+
+    behaviors: [
+      Polymer.PaperInputBehavior,
+      Polymer.IronFormElementBehavior
+    ],
+
+    properties: {
+      /**
+       * The label for this input.
+       */
+      label: {
+        type: String,
+        value: "Postcode"
+      }
+    }
+
+  })
+
+})();
+
+</script>
